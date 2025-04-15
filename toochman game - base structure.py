@@ -12,7 +12,7 @@ class character:
 
     def take_damage(self, amount):
         damage = max(0, amount - self.defense)
-        self.heath = self.health - damage
+        self.health = self.health - damage
 
         print (f" {self.name} takes {damage} damage! ( HP: {self.health}/ {self.max_health})")
         return damage
@@ -40,24 +40,32 @@ class player(character):
         self.weapon =weapon
         print (f" {self.name} equips a {weapon.name}! (+ {weapon.damage_boost} ATK)")
 
+    def unequip_weapon(self):
+        self.weapon = None
+        print (f" {self.name} unequips a {weapon.name}!")
+
     def equip_armor(self, armor):
         self.armor = armor
         print (f" {self.name} equips a {armor.name}! (+ {armor.defense_boost} DEF)")
+
+    def unequip_armor(self):
+        self.armor = None
+        print (f" {self.name} unequips a {weapon.name}!")
 
     def attack_value(self):
         attack_base = self.attack
         if self.weapon:
             attack.base = self.weapon.damage_boost
         if self.kill_dragon_boost:
-            attack.base = 15
-        return attack.base
+            attack_base += 15
+        return attack_base
 
     def defense_value(self):
         defense_base = self.defense
         if self.weapon:
             defense_base = self.defense.defense_boost
         if self.kill_dragon_boost:
-            defense_base = 15
+            defense_base += 15
         return defense_base
 
     def add_to_inventory(self, item):
@@ -80,7 +88,10 @@ class enemy(character):
     def __init__(self, name, health, attack, defense, stage):
         super().__init__(name, health, attack, defense)
         self.stage = stage
-        
+
+    
+
+    
         
 class stage:
     def __init__ (self, number, enemies, mini_boss, boss, side_quests = None):
@@ -91,28 +102,32 @@ class stage:
         self.side_quests = side_quests or []
         self.cleared = False
 
-    def star_stage(self, player):
+    def start_stage(self, player):
         print (f"\n >>> Stage {self.number} Begins ! <<<")
 
         for enemy in self.enemies:
             self.battle_enemy(player,enemy)
+            
 
             if not player.is_alive():
                 print("you died! Game over.")
                 return
 
-        print(f"Mini- boss Approaching: {self.mini_boss.name}")
-        self.battle_enemy(player, self.mini_boss)
+        #print(f"Mini- boss Approaching: {self.mini_boss.name}")
+        #self.battle_enemy(player, self.mini_boss)
+
+        '''if player.is_alive():
+            #print(f"Boss Encounter: {self.boss_name}")
+            #self.batlle_enemy(player, self.boss)'''
+            
 
         if player.is_alive():
-            print(f"Boss Encounter: {self.boss_name}")
-            self.batlle_enemy(player, self.boss)
-
-        if player_alive():
             print(f"stage {self.number} cleared!")
             self.cleared =  True
             player.stage += 1
-
+    def make_enemies (self):
+        pass
+        
     def battle_enemy(self, player, enemy):
         print(f"\nYou Encounter a wild {enemy.name}")
 
@@ -122,6 +137,7 @@ class stage:
 
             if enemy.is_alive():
                 player.take_damage(enemy.attack)
+                input()
         if not enemy.is_alive():
             print(f"{enemy.name} is defeated!")
 
@@ -133,7 +149,18 @@ class stage:
             
               
 
+wolf = enemy("wolf", 30, 5,2, stage =1)
+snake = enemy("snake", 30, 5,3, stage = 1)
 
+stage1 = stage(
+    number = 1,
+    enemies = [wolf, snake],
+    mini_boss = None,
+    boss = None,
+    side_quests = None )
+
+player = player("Asha")
+stage1.start_stage(player)
 
 
 
