@@ -1,0 +1,126 @@
+class Lamia:
+    def __init__(self, name="Serapha (???)"):
+        self.name = name
+        self.health = 40
+        self.max_health = 40
+        self.attack = 6
+        self.defense = 2
+        self.disguised_as = "Dragon"
+        self.angry_level = 0
+        self.has_given_quest = False
+        self.sidequest = SideQuest(
+            name="Split the Spoils",
+            description="Help the disguised dragon rob the treasurer in the next village.",
+            objective="Meet Serapha at the treasurer's house and break in silently.",
+            reward=Item("Stolen Gem", "A valuable gem Serapha promised to split.")
+        )
+
+    def interact(self, player):
+        print(f"\nYou encounter a mysterious figure: {self.name}")
+        print('"Ah, traveler... The dragons are not what you think. They burn, they lie, they steal. We need to stop them."')
+
+        options = [
+            "1. 'I don’t trust dragons either.'",
+            "2. 'Who are you to say that? They’ve done good too.'",
+            "3. 'You’re obsessed with power and wealth, aren’t you?'",
+            "4. 'I’m just passing by, I want no trouble.'",
+            "5. 'What are you planning exactly?'",
+            "6. 'You're wrong. I trust the dragons more than shady strangers.'"
+        ]
+
+        while True:
+            for opt in options:
+                print(opt)
+            choice = input("Choose your response (1-6): ")
+
+            if choice == "1":
+                print('"Exactly. We must act before they enslave us all."')
+                self.offer_quest(player)
+                break
+            elif choice == "2":
+                print('"Spoken like a fool. The flames will find you."')
+                self.angry_level += 1
+            elif choice == "3":
+                print('"Heh... Is that a bad thing? Riches are freedom."')
+                self.angry_level += 1
+            elif choice == "4":
+                print('"Then walk carefully. Trouble finds those with no spine."')
+                break
+            elif choice == "5":
+                print('"A heist. We rob a treasurer—harmless really. You in?"')
+                self.offer_quest(player)
+                break
+            elif choice == "6":
+                print('"Then die with the rest of the dragon-loving fools!"')
+                self.angry_level += 2
+
+            if self.angry_level >= 3:
+                print(f"\n{self.name} scowls. \"I tire of your arrogance. You're not worth the breath.\"")
+                print("She vanishes into the woods, but suddenly two wolves pounce on you!")
+                self.trigger_wolf_battle(player)
+                break
+
+    def offer_quest(self, player):
+        if self.has_given_quest:
+            print("You've already taken her offer.")
+            return
+
+        print('"Let’s split the spoils, yes? You do the dirty work, and I’ll handle the riches. Deal?"')
+        accept = input("Do you accept the sidequest? (yes/no): ").lower()
+        if accept == "yes":
+            print('"Good. Meet me near the village treasurer when the time is right."')
+            player.active_quests.append(self.sidequest)
+            self.has_given_quest = True
+        else:
+            print('"A shame. Riches suit you."')
+            self.angry_level += 1
+
+    def trigger_wolf_battle(self, player):
+        wolf1 = enemy("Wolf A", 20, 5, 1, player.stage)
+        wolf2 = enemy("Wolf B", 20, 5, 1, player.stage)
+
+        wolves = [wolf1, wolf2]
+        print("\n--- Combat Tutorial ---")
+        print("Instructions:")
+        print("1. Type 'attack' to hit a wolf.")
+        print("2. Type 'target 1' or 'target 2' to choose your target.")
+        print("3. Type 'block' to reduce incoming damage.")
+        print("4. Type 'run' to attempt escape (tutorial won’t allow it).")
+
+        target = 0
+        while player.is_alive() and any(wolf.is_alive() for wolf in wolves):
+            cmd = input("\nYour move: ").lower()
+
+            if cmd.startswith("target"):
+                if "1" in cmd:
+                    target = 0
+                elif "2" in cmd:
+                    target = 1
+                print(f"You focus on {wolves[target].name}")
+            elif cmd == "attack":
+                if wolves[target].is_alive():
+                    damage = player.attack_value()
+                    wolves[target].take_damage(damage)
+                    if not wolves[target].is_alive():
+                        print(f"{wolves[target].name} is defeated!")
+                else:
+                    print("That wolf is already down!")
+            elif cmd == "block":
+                print("You brace yourself for incoming attacks. Damage will be halved.")
+                for wolf in wolves:
+                    if wolf.is_alive():
+                        player.take_damage(wolf.attack // 2)
+                continue
+            elif cmd == "run":
+                print("You can't run from this tutorial fight!")
+            else:
+                print("Invalid command.")
+
+            for wolf in wolves:
+                if wolf.is_alive():
+                    player.take_damage(wolf.attack)
+
+        if player.is_alive():
+            print("You defeated the wolves! You feel stronger already.")
+            wolf_fang = Item("Wolf Fang", "A fang from a defeated wolf. Can be traded or sold.")
+            player.add_to_inventory(wolf_fang)
