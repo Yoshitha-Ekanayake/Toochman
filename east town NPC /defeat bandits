@@ -1,0 +1,208 @@
+class NPC_01_east_town(NPC):
+    
+    super().__init__(name = "small farmer" , health = 20 , items = None, side_quest = "defeat bandits", friendly = True)
+
+    def interact(self, player):
+        print(f"As you walk into the east town, you see a farmer like figure crying in his door steps")
+        choice =  input ("do you want to interact with the farmer? (yes/no)").lower()
+
+        if choice == "yes":
+            print("you are approaching the farmer, farmer looking at you with a desperate face")
+            print(" Farmer stood up in his place and approching you")
+            print(f"{self.name} : hello beautiful knight !, please help me ! (farmer started to crying again")
+            print(f"{player.name}: what happen to you?")
+            print(f"{self.name} : so when i was carrying my loot truck i was attacked by the trickster bandits")
+            print(f"{self.name}: i begged  them to spare me and my goods but they took everything from me even my daughter.... ( farmer started crying again like a pathetic figure")
+            print(f"{self.name}: pleasee adventurerr pleasee.. help mee... please rescue my sweet daughter and my goods.. she is my life! farmer grabbed her feet, kneel down and started begging")
+
+            print(f" {player.name}:(thinking)(hmm... poor farmer.. should i help him...?)")
+            choice_01 = input ("do u accept the request?: (yes/no)").lower()
+
+            if choice_01 = "yes":
+                
+                
+    
+
+
+
+class defeat_bandits:
+
+    def __init__(self):
+        self.name =(" Rescue the villages from the bandits")
+        self.bandits = [bandit_01,bandit_02, bandit_03, bandit_04, bandit_05 ]
+
+[ enemy("bandit 01", health = 35, attack = 12, defense = 5, stage = 2),
+                         enemy("bandit 02", health = 35, attack = 10, defense = 5, stage = 2),
+                         enemy("bandit 03", health = 35, attack = 9, defense = 5, stage = 2),
+                         enemy("bandit 04", health = 35, attack = 11, defense = 5, stage = 2),
+                         enemy("bandit 05", health = 35, attack = 12, defense = 5, stage = 2),]
+        self.obstacles = ["Fallen logs", "big stone"]
+
+
+        def show_obstacles(self, player):
+            print("\nObstacles in the road")
+
+            print(f" there are {self.obstacles[0]} in front of the road")
+            print(f" to get the pass the obstacle u need to cut down {self.obstacles[0]}!")
+            choice = input( " Use the axe to cut down the {self.obstacles[0]} to get passed it!:").lower()
+
+            if choice == "axe":
+                player.equip.(axe)
+
+                choice_01 = input ("press any button to cut {self.obstacles[0]}:").lower()
+                
+                if choice_01 == input():
+                    print(" you have cut down the self.obstacles[0]} and cleared the road !")
+                    self.obstacles.remove[0]
+
+
+                    
+            print("\nAnother obstacles in the road")
+            print(f" there are {self.obstacles[1]} in front of the road")
+            print(f" to get the pass the obstacle u need to push the {self.obstacles[0]}out of the road")
+
+            choice_02 = input ("press any button to push the {self.obstacles[0]}:").lower()
+
+            if choice_02 == input():
+                 self.encounter_theifs(player)
+                
+
+        def encounter_thiefs(self, player):
+
+            print(f"\n Suddenly a group of people who wearing a cameo color suits came out of nowhere !! and surrounded the {player.name}!!! ")
+            print(f" {player.name}: (thinking) Thiefs are exactly matches the description of farmer saying huh.... she was thinking this while keeping her eye contact with the strangers")
+            print(f" {self.bandits.name[0]}: Hoooo ! this time we hit the jackpot guyss !! its a beautiful lady knight !!/ one bandit saying this while looking at {player.name}")
+            print(f" bandit group laughed very sarcastically !")
+            print(f" {self.bandits.name} : hey princess would you like to give us your precious belonging here please? ( one bandit ask {player.name} while licking his knife ")
+            
+            options = [
+                
+                "1. 'This is your worst day bandits ! iam here to kick your asses!.'",
+                "2. 'I’m just passing by, I want no trouble.'",
+                "3. 'Iam looking for a small child'"
+               ]
+            
+            while True:
+                
+                for opt in options:
+                    print(opt)
+                    
+                choice = input("Choose your response (1-3): ")
+
+
+
+                if choice == "1":
+                    print(f" {self.bandits.name[3]}: ohh you are going to get hurt sweet lady "')
+                    self.trigger_battle_bandits(player)
+                    break
+
+                if choice == "2":
+                    print(f"{self.bandits.name[3]}: hahaha !( laughed sarcastically!) you are going no where lady unless you give what we wants")
+                    print(f"{self.bandits.name[2]}: We ask u one more time,  Give your belongings lady or else u are going to get hurt")
+
+                    options_1 = [ "1. 'Fuck you Assholes ! iam not giving anything! ( draws your weapon!)'",
+                                "2. 'Okay This is what i have' ( thiefs get your armor and your weapons) ",
+                            ]
+                    
+                    for opt in options_1:
+                        
+                        print(opt)
+                    
+                    choice_01 = input ("Choose your response (1-2): ")
+
+
+                    if choice_01 =="1":
+                        self.trigger_battle_bandits(player)
+                        break
+
+                    if choice_01 == "2":
+                        print(f" {player.name}lost the armor and weapon")
+                        print(f" {self.bandits.name[4]}: Our lucky dayy ! We got some valuable armor from a knight ! how humiliating ! ( theifs started to laugh very loudly)")
+                        print(f" theifs vanished into the forest")
+                        print(" You failed the Quest!")
+
+                if choice == "3":
+                    print(f" {self.bandits.name[3]} haha to know about her you have to defeat us ! but thats not gonna happen haha!")
+                    print(f" {player.name}: Very well then, I could warm up with you guys")
+                    self.trigger_battle_bandits(player)
+                    break
+
+        def trigger_battle_bandits (self, player):
+
+            bandit_01 = enemy("bandit 01", health = 35, attack = 12, defense = 5, stage = 2),
+            bandit_02 = enemy("bandit 02", health = 35, attack = 10, defense = 5, stage = 2),
+            bandit_03 = enemy("bandit 03", health = 35, attack = 9, defense = 5, stage = 2),
+            bandit_04 = enemy("bandit 04", health = 35, attack = 11, defense = 5, stage = 2),
+            bandit_05 = enemy("bandit 05", health = 35, attack = 12, defense = 5, stage = 2),
+            
+            
+            print("\n  -----Combat Starts-----")
+
+            target = 0
+            
+            while any(self.bandits.is_alive() for bandits in self.bandits) and player.is_alive():
+                print("\nYour Turn:")
+                
+                cmd = input("\nYour move: ").lower()
+
+                if cmd.startswith("target"):
+                    
+                    if "1" in cmd:
+                        target = 0
+
+                    elif "2" in cmd:
+                        target = 1
+                    
+                    elif "3" in cmd:
+                        target = 2
+                        
+                    elif "4" in cmd:
+                        target = 3
+                        
+                    elif "5" in cmd:
+                        target = 4
+                        
+                    print(f"You focus on {self.bandits[target].name}")
+                    
+                elif cmd == "attack":
+                    if self.bandits[target].is_alive():
+                        damage = player.attack_value()
+                        self.bandits[target].take_damage(damage)
+
+                        if not self.bandits[target].is_alive():
+                            
+                            print(f"{self.bandits[target].name} is defeated!")
+
+                    else:
+                        print("Bandit is already down")
+
+                elif cmd == "block":
+                    print("You brace yourself for incoming attacks. Damage will be halved.")
+                    player.defense += 5
+                    
+                    for bandits in self.bandits:
+                        if bandits.is_alive():
+                            player.take_damage(bandits.attack // 2)
+
+                    continue
+
+                elif cmd = "run":
+                    print ("you can't run from this fight")
+
+                else:
+                    print("Invalid command")
+
+                for bandits in self.bandits:
+                    
+                    if bandits.is_alive():
+                        player.take_damage(bandits.attack)
+
+                player.defense = max(10, player.defense - 5)  # Reset block boost
+                
+            if player.is_alive():
+                print("You defeated the thiefs!")
+
+                money_pouch = Item("Farmer's money pouch", "Farmer's stolen valuables")
+                Batch_bandits = Item ("trickster Bandit batch"," A trophy for defeating trickster bandits")
+                player.add_to_inventory(money_pouch)
+                player.add_to_inventory(Batch_bandits)
