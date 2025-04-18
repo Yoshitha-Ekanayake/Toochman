@@ -1,0 +1,99 @@
+class LamiaDisguisedNPC(NPC):
+    def __init__(self):
+        super().__init__(
+            name="Mysterious Dragon",
+            health=100,
+            items=["Gold Coin", "Smoke Bomb"], sidequest=self.create_treasure_heist_quest()
+        )
+        self.real_identity = "Lamia"
+        self.anger_level = 0
+
+    def interact(self, player):
+        print("??? (Disguised as Dragon): 'The dragons are manipulating everyone. We must rise against them.'")
+        print("\nChoose your response:")
+        print("1. 'You're right. I never trusted dragons.'")
+        print("2. 'I don’t believe that.'")
+        print("3. 'Who are you, really?'")
+        print("4. 'I don’t care. Leave me alone.'")
+        print("5. 'What’s in it for me?'")
+        print("6. 'I like gold... a lot.'")
+
+        choice = input(">> ")
+
+        if choice == "1":
+            print("Mysterious Dragon: 'I knew I could count on you.'")
+            self.offer_sidequest(player)
+        elif choice == "2":
+            self.anger_level += 1
+            print("Mysterious Dragon: 'Such foolish loyalty to beasts...'")
+        elif choice == "3":
+            self.anger_level += 1
+            print("Mysterious Dragon: 'You're nosy. That’s not safe.'")
+        elif choice == "4":
+            self.anger_level += 2
+            print("Mysterious Dragon: 'You’ll regret this.'")
+        elif choice == "5":
+            print("Mysterious Dragon: 'Help me rob the village treasurer. We’ll split the take.'")
+            self.offer_sidequest(player)
+        elif choice == "6":
+            print("Mysterious Dragon: 'Ah... a greedy one. I like you.'")
+            self.offer_sidequest(player)
+        else:
+            print("Invalid choice. The NPC stares at you suspiciously.")
+
+        if self.anger_level >= 3:
+            self.trigger_tutorial_battle(player)
+
+    def offer_sidequest(self, player):
+        print("Sidequest Offered: 'Village Heist'")
+        player.active_quests.append(self.sidequest)
+
+    def create_treasure_heist_quest(self):
+        return SideQuest( title="Village Heist", description="Rob the village treasurer and give the disguised dragon a portion of the loot.", objectives=["Enter village treasury", "Steal gold", "Return to the disguised dragon"], reward="Unknown (Hint: he's gonna betray you)")
+
+    def trigger_tutorial_battle(self, player):
+        print("\nMysterious Dragon: 'You’re pathetic. I won’t waste my power... but these will do.'")
+        print("Two wolves appear and growl.")
+
+        wolf1 = Enemy("Wolf A", health=25, attack=5, defense=2, stage=1)
+        wolf2 = Enemy("Wolf B", health=25, attack=5, defense=2, stage=1)
+
+        self.start_tutorial_battle(player, [wolf1, wolf2])
+
+    def start_tutorial_battle(self, player, wolves):
+        print("\n--- TUTORIAL BATTLE BEGINS ---")
+        print("You will learn how to: Attack, Target, Block, and Run.")
+
+        while any(wolf.is_alive() for wolf in wolves) and player.is_alive():
+            print("\nYour Turn:")
+            for idx, wolf in enumerate(wolves):
+                if wolf.is_alive():
+                    print(f"{idx + 1}. {wolf.name} (HP: {wolf.health})")
+
+            action = input("Choose Action: (attack/block/run): ").lower()
+
+            if action == "attack":
+                target_idx = int(input("Choose target (1 or 2): ")) - 1
+                if 0 <= target_idx < len(wolves) and wolves[target_idx].is_alive():
+                    wolves[target_idx].take_damage(player.attack_value())
+                else:
+                    print("Invalid target.")
+            elif action == "block":
+                print("You brace for the incoming attacks.")
+                player.defense += 5
+            elif action == "run":
+                print("You can’t run from this tutorial!")
+            else:
+                print("Invalid action.")
+
+            for wolf in wolves:
+                if wolf.is_alive():
+                    print(f"{wolf.name} attacks!")
+                    player.take_damage(wolf.attack)
+
+            player.defense = max(10, player.defense - 5)  # Reset block boost
+
+        if player.is_alive():
+            print("\nYou defeated both wolves!")
+            wolf_fang = Item("Wolf Fang", "A trophy from your first battle.")
+            player.add_to_inventory(wolf_fang)

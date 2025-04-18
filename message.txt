@@ -1,0 +1,69 @@
+class DragonNPC(character):
+    def __init__(self, name="Myrvex"):
+        super().__init__(name, health=300, attack=25, defense=20)
+        self.friendliness = 0  # Increases with positive interactions
+        self.state = "neutral"  # neutral, friendly, hostile
+        self.dot_effect = None  # Damage-over-time effect
+        self.dot_turns_remaining = 0
+
+    def talk(self, player):
+        print(f"\n{self.name}: 'You have come far, mortal. Your journey now diverges.'")
+        print("1. Challenge the dragon (Fight)")
+        print("2. Offer to help the dragon (Ally path)")
+        print("3. Walk away (Ignore)")
+        choice = input("Choose your path (1/2/3): ")
+
+        if choice == "1":
+            print(f"{self.name}: 'So be it. I shall not hold back!'")
+            self.state = "hostile"
+            self.battle(player)
+
+        elif choice == "2":
+            self.friendliness += 1
+            print(f"{self.name}: 'You have chosen wisely. My strength will aid you.'")
+            player.kill_dragon_boost = False
+            player.dragon_path = "help"
+            player.blessing = True
+
+        elif choice == "3":
+            print(f"{self.name}: 'Then you shall walk your path alone.'")
+            player.dragon_path = "ignore"
+
+        else:
+            print(f"{self.name}: 'Do not toy with me, mortal.'")
+
+    def special_attack(self, player):
+        if self.dot_effect:
+            print(f"{self.name} continues the {self.dot_effect['name']}!")
+            player.take_damage(self.dot_effect["damage"])
+            self.dot_turns_remaining -= 1
+            if self.dot_turns_remaining <= 0:
+                self.dot_effect = None
+
+        move = random.choice(["fire_breath", "tail_whip", "poison_bite"])
+        if move == "fire_breath":
+            print(f"{self.name} uses Fire Breath!")
+            damage = 35
+            player.take_damage(damage)
+        elif move == "tail_whip":
+            print(f"{self.name} uses Tail Whip!")
+            damage = 20
+            player.take_damage(damage)
+        elif move == "poison_bite":
+            print(f"{self.name} uses Poison Bite! It causes damage over time.")
+            self.dot_effect = {"name": "Poison Bite", "damage": 10}
+            self.dot_turns_remaining = 3
+
+    def battle(self, player):
+        while self.is_alive() and player.is_alive():
+            self.special_attack(player)
+            if player.is_alive():
+                damage = player.attack_value()
+                self.take_damage(damage)
+                input()
+        if not self.is_alive():
+            print(f"{self.name} has been slain!")
+            player.kill_dragon_boost = True
+            player.dragon_path = "kill"
+        elif not player.is_alive():
+            print("You have been defeated...")
